@@ -22,11 +22,10 @@ to https://mapshaper.org/
 
 Export to topojson as `data/processed/us-can-joined.json`
 
-Run `trains merge data/processed/us-can-joined.json data/processed/us-can-merged.json`
+Run `trains merge data/processed/us-can-joined.json public/states.json`
 
 Run `trains extract-canada data/raw/hsr_data.xlsx data/raw/canadacities.csv data/processed/canada-cities-merged.json`
 
 Run `trains extract-us data/raw/hsr_data.xlsx data/raw/uscities.csv data/processed/us-cities-rename.csv data/processed/us-cities-merged.json`
 
-Put them all into mapshaper, merge, and export to `data/processed/all-almost.json`
-
+Run `trains final-merge data/processed/canada-cities-merged.json data/processed/us-cities-merged.json public/cities.json`

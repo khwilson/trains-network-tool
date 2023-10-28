@@ -1,3 +1,4 @@
+import csv
 import json
 
 import click
@@ -140,21 +141,39 @@ def extract_us_command(modelfile: str, dbfile: str, renamefile: str, outfile: st
 
 
 @cli.command("final-merge")
-@click.argument("infile")
+@click.argument("uscities")
+@click.argument("canadacities")
 @click.argument("outfile")
-def merge_command(infile: str, outfile: str):
-    with open(infile, "rb") as inf:
-        j = json.load(inf)
+def final_merge_command(uscities: str, canadacities: str, outfile: str):
+    u_df = gpd.read_file(uscities)
+    c_df = gpd.read_file(canadacities)
+    pd.concat([u_df, c_df]).to_file(outfile)
 
-    j["objects"]["us-cities-merged"]["geometries"].extend(
-        j["objects"]["canada-cities-merged"]["geometries"]
-    )
-    j["objects"]["cities"] = j["objects"]["us-cities-merged"]
-    del j["objects"]["us-cities-merged"]
-    del j["objects"]["canada-cities-merged"]
+
+@cli.command("segments")
+@click.argument("modelfile")
+@click.argument("renamefile")
+@click.argument("outfile")
+def segments_command(modelfile: str, renamefile: str, outfile: str):
+    df = pd.read_excel(modelfile, sheet_name="INPUT Track Segments", skiprows=3)
+    df = df.rename(columns={
+        "From": "from_city",
+        "To": "to_city",
+        "Distance": "distance",
+        "Cost, billions": "cost",
+    })[["from_city", "to_city", "distance", "cost"]]
+    df["cost"] = (df["cost"] * 1e9).astype(int)
+
+    rename_df = pd.read_csv(renamefile)
+    mapper = dict(rename_df[["city_orig", "city"]].values)
+    df["from_city"] = df["from_city"].map(mapper)
+    df["to_city"] = df["to_city"].map(mapper)
 
     with open(outfile, "wt") as outf:
-        json.dump(j, outf)
+        writer = csv.writer(outf)
+        writer.writerow(["from_city", "to_city", "distance", "cost"])
+        for _, row in df.iterrows():
+            writer.writerow([row["from_city"], row["to_city"], row["distance"], row["cost"]])
 
 
 if __name__ == "__main__":
