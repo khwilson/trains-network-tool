@@ -149,6 +149,7 @@ export function computeSegmentStatistics({
             ridership: 0,
             totalProfit: 0,
             cost: seg.cost,
+            roi: -1,
           }
           segmentStatistics[segName] = segStats
         }
@@ -159,6 +160,8 @@ export function computeSegmentStatistics({
         // But assign total profit proportional to distance
         // Divide by 2 since each route appears twice
         segStats.totalProfit += (totalProfit * (seg.distance / distance)) / 2
+
+        segStats.roi = (12 * segStats.totalProfit - seg.cost) / seg.cost
       }
     }
   }

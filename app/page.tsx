@@ -10,6 +10,8 @@ import {
 } from "react-simple-maps"
 
 import { csv } from "d3-fetch"
+import { scaleSequential } from "d3-scale"
+import { interpolateBlues } from "d3-scale-chromatic"
 import { useEffect, useMemo, useState } from "react"
 import { CityMap, CityRaw, Segment, SegmentMap } from "."
 import clsx from "clsx"
@@ -18,6 +20,13 @@ import {
   computeSegmentStatistics,
   computeShortestPaths,
 } from "./lib/graphAlgorithms"
+import {
+  Tab,
+  TabPanel,
+  Tabs,
+  TabsBody,
+  TabsHeader,
+} from "@material-tailwind/react"
 
 const statesUrl = "/states.json"
 const segmentsUrl = "/segments.csv"
@@ -71,6 +80,10 @@ export default function Home() {
       [segName]: { ...segments[segName], isOn: !segments[segName].isOn },
     })
   }
+
+  const segmentScale = scaleSequential([-1, 1]).interpolator((t) =>
+    interpolateBlues(t / 2),
+  )
 
   const foo = useMemo(() => {
     const shortestPaths = computeShortestPaths(segments)
@@ -134,7 +147,9 @@ export default function Home() {
                 key={`segment-${idx}`}
                 stroke={clsx({
                   "#000": !isOn,
-                  "#0f0": isOn,
+                  [segmentScale(
+                    (foo.segmentStatistics[segName] || { roi: -1 }).roi,
+                  )]: isOn,
                 })}
               />
             )
@@ -142,100 +157,139 @@ export default function Home() {
         </ComposableMap>
       </div>
       <div className="col-start-1 col-end-5">
-        <table>
-          <thead>
-            <tr>
-              <td>From</td>
-              <td>To</td>
-              <td>Cost ($b)</td>
-              <td>Ridership (m)</td>
-              <td>Total Profit ($m)</td>
-              <td>ROI (%)</td>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.keys(foo.segmentStatistics).map((segName, idx) => {
-              const segStats = foo.segmentStatistics[segName]
-              const [fromCity, toCity] = segName.split(" - ")
-              return (
-                <tr key={`output-segment-tr-${idx}`}>
-                  <td key={`output-segment-td-from-${idx}`}>{fromCity}</td>
-                  <td key={`output-segment-td-to-${idx}`}>{toCity}</td>
-                  <td key={`output-segment-td-cost-${idx}`}>
-                    {(segStats.cost / 1e9).toFixed(2)}
-                  </td>
-                  <td key={`output-segment-td-ridership-${idx}`}>
-                    {(segStats.ridership / 1e6).toFixed(3)}
-                  </td>
-                  <td key={`output-segment-td-totalprofit-${idx}`}>
-                    {(segStats.totalProfit / 1e6).toFixed(2)}
-                  </td>
-                  <td key={`output-segment-td-roi-${idx}`}>
-                    {(
-                      (100 * (segStats.totalProfit - segStats.cost)) /
-                      segStats.cost
-                    ).toFixed(1)}
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
-      <div className="col-start-1 col-end-5">
-        <table>
-          <thead>
-            <tr>
-              <td>From</td>
-              <td>To</td>
-              <td>Distance</td>
-              <td>Cost</td>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.values(segments).map((segment, idx) => (
-              <tr key={`input-segment-tr-${idx}`}>
-                <td key={`input-segment-td-from-${idx}`}>{segment.fromCity}</td>
-                <td key={`input-segment-td-to-${idx}`}>{segment.toCity}</td>
-                <td key={`input-segment-td-dist-${idx}`}>{segment.distance}</td>
-                <td key={`input-segment-td-cost-${idx}`}>
-                  <input
-                    value={segment.cost}
-                    onChange={(event) =>
-                      setSegments((old) => {
-                        return {
-                          ...old,
-                          [segment.name]: {
-                            ...segment,
-                            cost: +event.target.value,
-                          },
-                        }
-                      })
-                    }
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="col-start-1 col-end-5">
-        <table>
-          <thead>
-            <tr>
-              <td>Name</td>
-              <td>Population</td>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.values(cities).map((city, idx) => (
-              <tr key={`tr-${idx}`}>
-                <td key={`td-name-${idx}`}>{city.city}</td>
-                <td key={`td-population-${idx}`}>{city.population}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Tabs value="input-population">
+          <TabsHeader>
+            <Tab value="input-population">Population</Tab>
+            <Tab value="input-segments">Segments</Tab>
+            <Tab value="output-segments">Output Segments</Tab>
+          </TabsHeader>
+          <TabsBody>
+            <TabPanel value="input-population">
+              <div className="col-start-1 col-end-5">
+                <table>
+                  <thead>
+                    <tr>
+                      <td>Name</td>
+                      <td>Population</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.values(cities).map((city, idx) => (
+                      <tr key={`tr-${idx}`}>
+                        <td key={`td-name-${idx}`}>{city.city}</td>
+                        <td key={`td-population-${idx}`}>
+                          <input
+                            value={city.population}
+                            onChange={(event) =>
+                              setCities((old) => {
+                                return {
+                                  ...old,
+                                  [city.city]: {
+                                    ...city,
+                                    population: +event.target.value,
+                                  },
+                                }
+                              })
+                            }
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </TabPanel>
+            <TabPanel value="input-segments">
+              {" "}
+              <div className="col-start-1 col-end-5">
+                <table>
+                  <thead>
+                    <tr>
+                      <td>From</td>
+                      <td>To</td>
+                      <td>Distance</td>
+                      <td>Cost</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.values(segments).map((segment, idx) => (
+                      <tr key={`input-segment-tr-${idx}`}>
+                        <td key={`input-segment-td-from-${idx}`}>
+                          {segment.fromCity}
+                        </td>
+                        <td key={`input-segment-td-to-${idx}`}>
+                          {segment.toCity}
+                        </td>
+                        <td key={`input-segment-td-dist-${idx}`}>
+                          {segment.distance}
+                        </td>
+                        <td key={`input-segment-td-cost-${idx}`}>
+                          <input
+                            value={segment.cost}
+                            onChange={(event) =>
+                              setSegments((old) => {
+                                return {
+                                  ...old,
+                                  [segment.name]: {
+                                    ...segment,
+                                    cost: +event.target.value,
+                                  },
+                                }
+                              })
+                            }
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </TabPanel>
+            <TabPanel value="output-segments">
+              {" "}
+              <div className="col-start-1 col-end-5">
+                <table>
+                  <thead>
+                    <tr>
+                      <td>From</td>
+                      <td>To</td>
+                      <td>Cost ($b)</td>
+                      <td>Ridership (m)</td>
+                      <td>Total Profit ($m)</td>
+                      <td>ROI (%)</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.keys(foo.segmentStatistics).map((segName, idx) => {
+                      const segStats = foo.segmentStatistics[segName]
+                      const [fromCity, toCity] = segName.split(" - ")
+                      return (
+                        <tr key={`output-segment-tr-${idx}`}>
+                          <td key={`output-segment-td-from-${idx}`}>
+                            {fromCity}
+                          </td>
+                          <td key={`output-segment-td-to-${idx}`}>{toCity}</td>
+                          <td key={`output-segment-td-cost-${idx}`}>
+                            {(segStats.cost / 1e9).toFixed(2)}
+                          </td>
+                          <td key={`output-segment-td-ridership-${idx}`}>
+                            {(segStats.ridership / 1e6).toFixed(3)}
+                          </td>
+                          <td key={`output-segment-td-totalprofit-${idx}`}>
+                            {(segStats.totalProfit / 1e6).toFixed(2)}
+                          </td>
+                          <td key={`output-segment-td-roi-${idx}`}>
+                            {(segStats.roi * 100).toFixed(1)}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </TabPanel>
+          </TabsBody>
+        </Tabs>
       </div>
     </main>
   )

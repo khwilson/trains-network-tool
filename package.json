@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "@datastructures-js/priority-queue": "^6.3.0",
+    "@material-tailwind/react": "^2.1.4",
     "clsx": "^2.0.0",
     "d3-fetch": "^3.0.1",
+    "d3-scale": "^4.0.2",
+    "d3-scale-chromatic": "^3.0.0",
     "next": "14.0.0",
     "react": "^18",
     "react-dom": "^18",
@@ -20,6 +23,8 @@
   },
   "devDependencies": {
     "@types/d3-fetch": "^3.0.5",
+    "@types/d3-scale": "^4.0.6",
+    "@types/d3-scale-chromatic": "^3.0.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

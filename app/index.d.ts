@@ -98,6 +98,7 @@ export interface SegmentStatistics {
   ridership: number
   totalProfit: number
   cost: number
+  roi: number
 }
 
 export interface SegmentStatisticsMap {
