@@ -7,7 +7,7 @@ export interface Segment extends SegmentRaw {
 }
 
 export interface SegmentMap {
-  [segName: string] : Segment
+  [segName: string]: Segment
 }
 
 export interface CityRaw {
@@ -22,45 +22,44 @@ export interface CityMap {
   [city: string]: CityRaw
 }
 
-
 export interface RouteStatistics {
   // The population of the origin city
-  fromCityPop: number;
+  fromCityPop: number
 
   // The population of the destination city
-  toCityPop: number;
+  toCityPop: number
 
   // The total ridership along the route (counts any passenger along
   // route no matter how long they have travelled
-  ridership: number;
+  ridership: number
 
   // The list of intermediary stops between the origin city and the
   // destination city along the _shortest_ path
-  path: string[];
+  path: string[]
 
   // The total distance along the shortest path between the origin
   // and destination
-  distance: number;
+  distance: number
 
   // The computed operating cost per passenger (will always be a multiple)
   // of `distance`)
-  operatingCostPerPassenger: number;
+  operatingCostPerPassenger: number
 
   // The default fare. Will always be a multiple of `distance`
-  proposedFare: number;
+  proposedFare: number
 
   // The maximum fare, which is `operatingCostPerPassenger` plus a constant
-  maxFare: number;
+  maxFare: number
 
   // The actual fare charged for the route, which will be
   // `min(maxFare, proposedFare)`
-  fare: number;
+  fare: number
 
   // The profit made on each trip. Equal to `operatingCostPerPassenger - fare`
-  profitPerPassenger: number;
+  profitPerPassenger: number
 
   // `profitPerPassenger * ridership`
-  totalProfit: number;
+  totalProfit: number
 }
 
 export interface RouteStatisticsMap {
