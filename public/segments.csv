@@ -1,0 +1,52 @@
+from_city,to_city,distance,cost
+Detroit,Toronto,360,11000000000
+Ottawa,Montreal,185,5600000000
+Toronto,Buffalo,170,5100000000
+Toronto,Ottawa,360,10800000000
+Chicago,Toledo,370,9300000000
+Chicago,Milwaukee,130,3300000000
+Chicago,St. Louis,460,11500000000
+Cincinnati,Columbus,190,4750000000
+Cleveland,Pittsburgh,200,6000000000
+Columbus,Cleveland,210,5300000000
+Indianapolis,Chicago,275,6900000000
+Indianapolis,Cincinnati,160,4000000000
+Louisville,Indianapolis,175,4400000000
+Louisville,Cincinnati,150,4500000000
+Madison,Minneapolis,470,12000000000
+Milwaukee,Madison,120,3000000000
+Toledo,Cleveland,180,4500000000
+Toledo,Detroit,95,2400000000
+Albany,Boston,245,7500000000
+Boston,New York,360,7200000000
+Buffalo,Cleveland,290,8700000000
+Buffalo,Albany,420,12600000000
+Montreal,Albany,340,10500000000
+New York,Philadelphia,142,2840000000
+New York,Albany,220,6600000000
+Philadelphia,Washington,220,4400000000
+Philadelphia,Harrisburg,170,5100000000
+Pittsburgh,Harrisburg,280,14000000000
+Atlanta,Greenville,230,6700000000
+Atlanta,Jacksonville,540,16200000000
+Atlanta,Nashville,365,11000000000
+Charlotte,Greensboro,150,4400000000
+Greenville,Charlotte,160,4650000000
+Jacksonville,Orlando,260,7800000000
+Nashville,Louisville,265,8000000000
+Nashville,Memphis,320,9000000000
+Orlando,Tampa,135,4099999999
+Orlando,Miami,390,11700000000
+Greensboro,Raleigh,120,3500000000
+Richmond,Raleigh,240,7000000000
+Washington,Richmond,180,5040000000
+Austin,College Station,155,4700000000
+Austin,San Antonio,125,3800000000
+Dallas,College Station,260,7800000000
+Houston,College Station,140,4200000000
+Fresno,Bakersfield,175,23000000000
+San Francisco,Fresno,310,41000000000
+Bakersfield,Los Angeles,262,36000000000
+Los Angeles,San Diego,175,5300000000
+Los Angeles,Las Vegas,400,12000000000
+Los Angeles,Phoenix,545,16399999999

@@ -2,7 +2,6 @@ import csv
 import json
 
 import click
-import geopandas as gpd
 import pandas as pd
 import us
 
@@ -79,12 +78,7 @@ def extract_us_command(modelfile: str, dbfile: str, outfile: str):
     merged_df = db_df.merge(population_df, how="left", on="city", indicator=True)
     assert (merged_df["_merge"] == "both").all()
 
-    gdf = gpd.GeoDataFrame(
-        merged_df, geometry=gpd.points_from_xy(merged_df["lng"], merged_df["lat"])
-    )
-    gdf[["city", "state", "population", "geometry"]].to_file(
-        outfile, driver="GeoJSON", index=False
-    )
+    merged_df[["city", "state", "population", "lng", "lat"]].to_csv(outfile, index=False)
 
 
 @cli.command("extract-us")
@@ -133,11 +127,7 @@ def extract_us_command(modelfile: str, dbfile: str, renamefile: str, outfile: st
     merged_df = merged_df.merge(population_df, on="city_orig", indicator=True)
     assert (merged_df["_merge"] == "both").all()
 
-    gdf = gpd.GeoDataFrame(
-        merged_df, geometry=gpd.points_from_xy(merged_df["lng"], merged_df["lat"])
-    )
-    gdf = gdf[["city", "state", "population", "geometry"]]
-    gdf.to_file(outfile, index=False, driver="GeoJSON")
+    merged_df[["city", "state", "population", "lng", "lat"]].to_csv(outfile, index=False)
 
 
 @cli.command("final-merge")
@@ -145,9 +135,9 @@ def extract_us_command(modelfile: str, dbfile: str, renamefile: str, outfile: st
 @click.argument("canadacities")
 @click.argument("outfile")
 def final_merge_command(uscities: str, canadacities: str, outfile: str):
-    u_df = gpd.read_file(uscities)
-    c_df = gpd.read_file(canadacities)
-    pd.concat([u_df, c_df]).to_file(outfile)
+    u_df = pd.read_csv(uscities)
+    c_df = pd.read_csv(canadacities)
+    pd.concat([u_df, c_df]).to_csv(outfile, index=False)
 
 
 @cli.command("segments")
