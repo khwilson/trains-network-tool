@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Modeling a Hypothetical North American Train Network
 
-## Getting Started
+This is a visualization of [Walter Ogozaly's](https://twitter.com/walterogozaly) automation of [Alon Levy's](https://www.pedestrianobservations.com) network model for potential high speed rail ROI in North America.
 
-First, run the development server:
+WARNING: This is *very very rough* and a reflection of one long plane ride's worth of work on building the interface. So please don't judge my skills too harshly. :-)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Setup
+
+I built this withe node 19. Install dependencies with
+
+```
+npm i
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+There are also some python scripts for data processing, whose dependencies you can install with
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+poetry install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Building the data
 
-## Learn More
+See `instructions.md`
 
-To learn more about Next.js, take a look at the following resources:
+## Building the site
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
+CC-BY 4.0
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Note that data sources include:
+  - SimpleMaps for city data
+    - US: https://simplemaps.com/data/us-cities
+    - Canada: https://simplemaps.com/data/canada-cities
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+And others listed for now in `instructions.md`.
