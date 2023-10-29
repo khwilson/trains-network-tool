@@ -1,4 +1,5 @@
-export interface Segment extends SegmentRaw {
+export type Segment = {
+  name: string
   fromCity: string
   toCity: string
   distance: number
