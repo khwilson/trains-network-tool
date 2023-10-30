@@ -11,7 +11,7 @@ import {
 
 import { csv } from "d3-fetch"
 import { scaleSequential } from "d3-scale"
-import { interpolateBlues, interpolatePlasma } from "d3-scale-chromatic"
+import { interpolatePlasma } from "d3-scale-chromatic"
 import { useEffect, useMemo, useState } from "react"
 import { CityMap, CityRaw, Segment, SegmentMap } from "."
 import clsx from "clsx"
@@ -81,9 +81,11 @@ export default function Home() {
     })
   }
 
-  const segmentScale = scaleSequential([0, 0.3]).interpolator((t) => interpolatePlasma(t + 0.25))
+  const segmentScale = scaleSequential([0, 0.3]).interpolator((t) =>
+    interpolatePlasma(t + 0.25),
+  )
 
-  const foo = useMemo(() => {
+  const computedStatistics = useMemo(() => {
     const shortestPaths = computeShortestPaths(segments)
     const routeStatistics = computeRouteStatistics({ shortestPaths, cities })
     const segmentStatistics = computeSegmentStatistics({
@@ -146,7 +148,11 @@ export default function Home() {
                 stroke={clsx({
                   "#000": !isOn,
                   [segmentScale(
-                    (foo.segmentStatistics[segName] || { roi: -1 }).roi,
+                    (
+                      computedStatistics.segmentStatistics[segName] || {
+                        roi: -1,
+                      }
+                    ).roi,
                   )]: isOn,
                 })}
               />
@@ -198,7 +204,6 @@ export default function Home() {
               </div>
             </TabPanel>
             <TabPanel value="input-segments">
-              {" "}
               <div className="col-start-1 col-end-5">
                 <table>
                   <thead>
@@ -244,7 +249,6 @@ export default function Home() {
               </div>
             </TabPanel>
             <TabPanel value="output-segments">
-              {" "}
               <div className="col-start-1 col-end-5">
                 <table>
                   <thead>
@@ -258,30 +262,35 @@ export default function Home() {
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.keys(foo.segmentStatistics).map((segName, idx) => {
-                      const segStats = foo.segmentStatistics[segName]
-                      const [fromCity, toCity] = segName.split(" - ")
-                      return (
-                        <tr key={`output-segment-tr-${idx}`}>
-                          <td key={`output-segment-td-from-${idx}`}>
-                            {fromCity}
-                          </td>
-                          <td key={`output-segment-td-to-${idx}`}>{toCity}</td>
-                          <td key={`output-segment-td-cost-${idx}`}>
-                            {(segStats.cost / 1e9).toFixed(2)}
-                          </td>
-                          <td key={`output-segment-td-ridership-${idx}`}>
-                            {(segStats.ridership / 1e6).toFixed(3)}
-                          </td>
-                          <td key={`output-segment-td-totalprofit-${idx}`}>
-                            {(segStats.totalProfit / 1e6).toFixed(2)}
-                          </td>
-                          <td key={`output-segment-td-roi-${idx}`}>
-                            {(segStats.roi * 100).toFixed(1)}
-                          </td>
-                        </tr>
-                      )
-                    })}
+                    {Object.keys(computedStatistics.segmentStatistics).map(
+                      (segName, idx) => {
+                        const segStats =
+                          computedStatistics.segmentStatistics[segName]
+                        const [fromCity, toCity] = segName.split(" - ")
+                        return (
+                          <tr key={`output-segment-tr-${idx}`}>
+                            <td key={`output-segment-td-from-${idx}`}>
+                              {fromCity}
+                            </td>
+                            <td key={`output-segment-td-to-${idx}`}>
+                              {toCity}
+                            </td>
+                            <td key={`output-segment-td-cost-${idx}`}>
+                              {(segStats.cost / 1e9).toFixed(2)}
+                            </td>
+                            <td key={`output-segment-td-ridership-${idx}`}>
+                              {(segStats.ridership / 1e6).toFixed(3)}
+                            </td>
+                            <td key={`output-segment-td-totalprofit-${idx}`}>
+                              {(segStats.totalProfit / 1e6).toFixed(2)}
+                            </td>
+                            <td key={`output-segment-td-roi-${idx}`}>
+                              {(segStats.roi * 100).toFixed(1)}
+                            </td>
+                          </tr>
+                        )
+                      },
+                    )}
                   </tbody>
                 </table>
               </div>
