@@ -161,7 +161,7 @@ export function computeSegmentStatistics({
         // Divide by 2 since each route appears twice
         segStats.totalProfit += (totalProfit * (seg.distance / distance)) / 2
 
-        segStats.roi = (12 * segStats.totalProfit - seg.cost) / seg.cost
+        segStats.roi = segStats.totalProfit / seg.cost
       }
     }
   }

@@ -11,7 +11,7 @@ import {
 
 import { csv } from "d3-fetch"
 import { scaleSequential } from "d3-scale"
-import { interpolateBlues } from "d3-scale-chromatic"
+import { interpolateBlues, interpolatePlasma } from "d3-scale-chromatic"
 import { useEffect, useMemo, useState } from "react"
 import { CityMap, CityRaw, Segment, SegmentMap } from "."
 import clsx from "clsx"
@@ -81,9 +81,7 @@ export default function Home() {
     })
   }
 
-  const segmentScale = scaleSequential([-1, 1]).interpolator((t) =>
-    interpolateBlues(t / 2),
-  )
+  const segmentScale = scaleSequential([0, 0.3]).interpolator((t) => interpolatePlasma(t + 0.25))
 
   const foo = useMemo(() => {
     const shortestPaths = computeShortestPaths(segments)
@@ -253,10 +251,10 @@ export default function Home() {
                     <tr>
                       <td>From</td>
                       <td>To</td>
-                      <td>Cost ($b)</td>
+                      <td>Capital Cost ($b)</td>
                       <td>Ridership (m)</td>
-                      <td>Total Profit ($m)</td>
-                      <td>ROI (%)</td>
+                      <td>Total Operating Profit ($m)</td>
+                      <td>Operating Profit / Capital Cost (%)</td>
                     </tr>
                   </thead>
                   <tbody>
