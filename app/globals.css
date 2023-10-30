@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 table {
-    font-family: sans-serif;
-    border-collapse: collapse;
-    border: 1px solid #ccc;
-    margin: 25px;
-    background-color: #fff;
-  }
-  tr {
-    border-bottom: 1px solid #ccc;
-  }
-  th,
-  td {
-    text-align: left;
-    padding: 8px 10px;
-  }
+  font-family: sans-serif;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+  margin: 25px;
+  background-color: #fff;
+}
+tr {
+  border-bottom: 1px solid #ccc;
+}
+th,
+td {
+  text-align: left;
+  padding: 8px 10px;
+}
